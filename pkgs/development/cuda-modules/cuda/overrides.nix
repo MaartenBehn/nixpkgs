@@ -367,7 +367,6 @@ filterAndCreateOverrides {
         let inherit (prev.nsight_systems) version;
           versionString = with lib.versions; "${majorMinor version}.${patch version}";
         in
-        {
         ''
           moveToOutput 'nsight-systems/${versionString}/host-linux-*' "''${!outputBin}"
           moveToOutput 'nsight-systems/${versionString}/target-linux-*' "''${!outputBin}"
@@ -382,7 +381,7 @@ filterAndCreateOverrides {
               fi
             done
           done
-        ''};
+        '';
 
       brokenConditions = prevAttrs.brokenConditions // {
         # Older releases require boost 1.70, which is deprecated in Nixpkgs
