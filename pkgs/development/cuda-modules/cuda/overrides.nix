@@ -297,6 +297,7 @@ filterAndCreateOverrides {
       ucx,
       wayland,
       xorg,
+      final,
     }:
     prevAttrs:
     let
@@ -309,7 +310,7 @@ filterAndCreateOverrides {
         else
           lib.getLib qt.qtwayland;
       qtWaylandPlugins = "${qtwayland}/${qt.qtbase.qtPluginPrefix}";
-      qt6Packages = lib.qt6Packages;
+      qt6Packages = final.pkgs.qt6Packages;
     in
     {
       # An ad hoc replacement for
@@ -358,12 +359,15 @@ filterAndCreateOverrides {
         qt6Packages.qtwebengine
       ];
 
-      postInstall =
+      postInstall = {
+        prev
+        }:
         # 1. Move dependencies of nsys, nsys-ui binaries to bin output
         # 2. Fix paths in wrapper scripts
-        let inherit (lib.nsight_systems) version;
+        let inherit (prev.nsight_systems) version;
           versionString = with lib.versions; "${majorMinor version}.${patch version}";
         in
+        {
         ''
           moveToOutput 'nsight-systems/${versionString}/host-linux-*' "''${!outputBin}"
           moveToOutput 'nsight-systems/${versionString}/target-linux-*' "''${!outputBin}"
@@ -378,7 +382,7 @@ filterAndCreateOverrides {
               fi
             done
           done
-        '';
+        ''};
 
       brokenConditions = prevAttrs.brokenConditions // {
         # Older releases require boost 1.70, which is deprecated in Nixpkgs
