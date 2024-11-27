@@ -361,7 +361,7 @@ filterAndCreateOverrides {
       postInstall =
         # 1. Move dependencies of nsys, nsys-ui binaries to bin output
         # 2. Fix paths in wrapper scripts
-        let inherit (prev.nsight_systems) version;
+        let inherit (lib.nsight_systems) version;
           versionString = with lib.versions; "${majorMinor version}.${patch version}";
         in
         ''
