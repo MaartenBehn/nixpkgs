@@ -297,8 +297,8 @@ filterAndCreateOverrides {
       ucx,
       wayland,
       xorg,
-      final,
     }:
+    final:
     prevAttrs:
     let
       inherit (lib.strings) versionOlder versionAtLeast;
@@ -359,9 +359,8 @@ filterAndCreateOverrides {
         qt6Packages.qtwebengine
       ];
 
-      postInstall = {
-        prev
-        }:
+      postInstall = 
+        prev:
         # 1. Move dependencies of nsys, nsys-ui binaries to bin output
         # 2. Fix paths in wrapper scripts
         let inherit (prev.nsight_systems) version;
