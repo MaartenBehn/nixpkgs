@@ -309,7 +309,7 @@ filterAndCreateOverrides {
         else
           lib.getLib qt.qtwayland;
       qtWaylandPlugins = "${qtwayland}/${qt.qtbase.qtPluginPrefix}";
-      qt6Packages = prev.pkgs.qt6Packages;
+      qt6Packages = lib.qt6Packages;
     in
     {
       # An ad hoc replacement for
