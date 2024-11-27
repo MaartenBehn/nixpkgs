@@ -298,7 +298,6 @@ filterAndCreateOverrides {
       wayland,
       xorg,
     }:
-    final:
     prevAttrs:
     let
       inherit (lib.strings) versionOlder versionAtLeast;
@@ -310,7 +309,6 @@ filterAndCreateOverrides {
         else
           lib.getLib qt.qtwayland;
       qtWaylandPlugins = "${qtwayland}/${qt.qtbase.qtPluginPrefix}";
-      qt6Packages = final.pkgs.qt6Packages;
     in
     {
       # An ad hoc replacement for
@@ -360,10 +358,9 @@ filterAndCreateOverrides {
       ];
 
       postInstall = 
-        prev:
         # 1. Move dependencies of nsys, nsys-ui binaries to bin output
         # 2. Fix paths in wrapper scripts
-        let inherit (prev.nsight_systems) version;
+        let inherit (nsight_systems) version;
           versionString = with lib.versions; "${majorMinor version}.${patch version}";
         in
         ''
