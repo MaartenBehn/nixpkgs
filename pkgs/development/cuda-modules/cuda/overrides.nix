@@ -359,6 +359,7 @@ filterAndCreateOverrides {
       ];
 
       postInstall = 
+        nsight_systems:
         # 1. Move dependencies of nsys, nsys-ui binaries to bin output
         # 2. Fix paths in wrapper scripts
         let inherit (nsight_systems) version;
