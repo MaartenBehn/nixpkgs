@@ -1,5 +1,5 @@
 import http from "node:http";
-import { createReadStream, existsSync, statSync } from "node:fs";
+import { createReadStream, existsSync, statSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
@@ -92,7 +92,7 @@ const demoServer = http.createServer((req, res) => {
 	const ext = path.extname(filePath).toLowerCase();
 
 	if (path.basename(filePath) === "index.html") {
-		let html = require("node:fs").readFileSync(filePath, "utf-8");
+		let html = readFileSync(filePath, "utf-8");
 		html = html.replace(
 			"</head>",
 			`<script src="/__config.js"></script></head>`

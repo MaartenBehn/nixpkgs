@@ -77,6 +77,12 @@ in stdenv.mkDerivation (finalAttrs: {
     cp ${./pnpm-workspace.yaml} pnpm-workspace.yaml
     cp ${./prodserver.ts} prodserver.ts
 
+    # Make wispUrl resolvable at runtime instead of baked in at build time
+    substituteInPlace packages/demo/src/store.ts \
+      --replace-fail \
+        'const DEFAULT_WISP_URL = import.meta.env.VITE_WISP_URL;' \
+        'const DEFAULT_WISP_URL = (window as any).__WISP_URL__ ?? import.meta.env.VITE_WISP_URL;'
+
     # Removing nightly from build script
     substituteInPlace packages/core/rewriter/wasm/build.sh \
       --replace-fail 'cargo +nightly' 'cargo' \
