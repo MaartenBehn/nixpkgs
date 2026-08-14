@@ -58,18 +58,12 @@ function safeJoin(root: string, urlPath: string): string | null {
 	return resolved;
 }
 
-function serveConfigJs(res: http.ServerResponse) {
-	res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8" });
-	res.end(`window.__WISP_URL__ = ${JSON.stringify(WISP_URL)};`);
+function buildConfigScriptTag(): string {
+	return `<script>window.__WISP_URL__ = ${JSON.stringify(WISP_URL)};</script>`;
 }
 
 const demoServer = http.createServer((req, res) => {
 	const reqPath = req.url || "/";
-
-	if (reqPath === "/__config.js") {
-		serveConfigJs(res);
-		return;
-	}
 
 	let filePath = safeJoin(DEMO_DIST, reqPath === "/" ? "/index.html" : reqPath);
 
@@ -93,10 +87,7 @@ const demoServer = http.createServer((req, res) => {
 
 	if (path.basename(filePath) === "index.html") {
 		let html = readFileSync(filePath, "utf-8");
-		html = html.replace(
-			"</head>",
-			`<script src="/__config.js"></script></head>`
-		);
+		html = html.replace("<head>", `<head>${buildConfigScriptTag()}`);
 		res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 		res.end(html);
 		return;
@@ -110,4 +101,5 @@ const demoServer = http.createServer((req, res) => {
 demoServer.listen(DEMO_PORT, DEMO_HOST, () => {
 	console.log(`scramjet demo  -> http://${DEMO_HOST}:${DEMO_PORT}/`);
 	console.log(`wisp server    -> ws://${WISP_HOST}:${WISP_PORT}/`);
+	console.log(`wisp url       -> ${WISP_URL}`);
 });
