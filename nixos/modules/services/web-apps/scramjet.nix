@@ -6,11 +6,7 @@ in
   options.services.scramjet = {
     enable = lib.mkEnableOption "Scramjet server";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.scramjet;
-      description = "The scramjet package to use.";
-    };
+    package = lib.mkPackageOption pkgs "scramjet" { };
 
     demoPort = lib.mkOption {
       type = lib.types.port;
