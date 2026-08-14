@@ -8,6 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEMO_PORT = Number(process.env.DEMO_PORT || 4141);
 const WISP_PORT = Number(process.env.WISP_PORT || 4142);
+const DEMO_HOST = process.env.DEMO_HOST || "127.0.0.1";
+const WISP_HOST = process.env.WISP_HOST || "127.0.0.1";
 const WISP_URL = process.env.WISP_URL || `ws://localhost:${WISP_PORT}/`;
 
 // dist output produced at BUILD time (see Nix changes below)
@@ -30,7 +32,7 @@ const wispserver = http.createServer((_req, res) => {
 wispserver.on("upgrade", (req, socket, head) => {
 	wisp.routeRequest(req, socket, head);
 });
-wispserver.listen(WISP_PORT);
+wispserver.listen(WISP_PORT, WISP_HOST);
 
 const MIME_TYPES: Record<string, string> = {
 	".html": "text/html; charset=utf-8",
@@ -89,7 +91,6 @@ const demoServer = http.createServer((req, res) => {
 
 	const ext = path.extname(filePath).toLowerCase();
 
-	// Inject config script into index.html specifically
 	if (path.basename(filePath) === "index.html") {
 		let html = require("node:fs").readFileSync(filePath, "utf-8");
 		html = html.replace(
@@ -106,7 +107,7 @@ const demoServer = http.createServer((req, res) => {
 	createReadStream(filePath).pipe(res);
 });
 
-demoServer.listen(DEMO_PORT, () => {
-	console.log(`scramjet demo  -> http://localhost:${DEMO_PORT}/`);
-	console.log(`wisp server    -> ws://localhost:${WISP_PORT}/`);
+demoServer.listen(DEMO_PORT, DEMO_HOST, () => {
+	console.log(`scramjet demo  -> http://${DEMO_HOST}:${DEMO_PORT}/`);
+	console.log(`wisp server    -> ws://${WISP_HOST}:${WISP_PORT}/`);
 });

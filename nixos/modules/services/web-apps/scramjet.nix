@@ -20,6 +20,20 @@ in
       description = "Port for the wisp websocket server.";
     };
 
+    demoHost = lib.mkOption {
+      type = lib.types.str;
+      default = "127.0.0.1";
+      example = "0.0.0.0";
+      description = "Host/interface for the demo web server to bind to.";
+    };
+
+    wispHost = lib.mkOption {
+      type = lib.types.str;
+      default = "127.0.0.1";
+      example = "0.0.0.0";
+      description = "Host/interface for the wisp websocket server to bind to.";
+    };
+
     wispUrl = lib.mkOption {
       type = lib.types.str;
       default = "ws://localhost:4142/";
@@ -49,6 +63,8 @@ in
       environment = {
         DEMO_PORT = toString cfg.demoPort;
         WISP_PORT = toString cfg.wispPort;
+        DEMO_HOST = cfg.demoHost;
+        WISP_HOST = cfg.wispHost;
         WISP_URL = cfg.wispUrl;
       };
 
